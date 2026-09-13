@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
 // Dynamic: any agent ID can appear (Arena agents use real IDs)
 type Balances = Record<string, number>;
 
@@ -24,9 +26,9 @@ export default function Home() {
   const fetchData = async () => {
     try {
       const [resBal, resEsc, resAud] = await Promise.all([
-        fetch('/api/ledger/balances'),
-        fetch('/api/ledger/escrows'),
-        fetch('/api/audit/logs')
+        fetch(`${API_URL}/api/ledger/balances`),
+        fetch(`${API_URL}/api/ledger/escrows`),
+        fetch(`${API_URL}/api/audit/logs`)
       ]);
       
       if (resBal.ok) setBalances(await resBal.json());
@@ -46,7 +48,7 @@ export default function Home() {
   const handleInitialize = async () => {
     setLoadingAction('initialize');
     try {
-      const response = await fetch('/api/escrow/initialize', {
+      const response = await fetch(`${API_URL}/api/escrow/initialize`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +79,7 @@ export default function Home() {
   const handleExecute = async (escrowId: string, grantId: string) => {
     setLoadingAction('execute_' + escrowId);
     try {
-      const response = await fetch('/api/escrow/execute', {
+      const response = await fetch(`${API_URL}/api/escrow/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -102,12 +104,11 @@ export default function Home() {
   const handleViolation = async (escrowId: string, grantId: string) => {
     setLoadingAction('violation_' + escrowId);
     try {
-      // Use agent/message intent to force a violation + slash
-      const response = await fetch('/api/agent/message', {
+      // Force violation in real engine
+      const response = await fetch(`${API_URL}/api/escrow/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          intent: 'execute_escrow',
           buyerId: 'agent_a_id',
           workerId: 'agent_b_id',
           escrowGrantId: grantId,

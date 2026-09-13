@@ -88,22 +88,28 @@ app.post('/api/escrow/initialize', async (req, res) => {
 /** Execute: run the kernel-enforced agent turn and evaluate the audit log */
 app.post('/api/escrow/execute', async (req, res) => {
   try {
-    const { buyerId, workerId, escrowGrantId } = req.body;
+    const { buyerId, workerId, escrowGrantId, _forceViolation } = req.body;
 
     if (!buyerId || !workerId) {
       return res.status(400).json({ error: 'buyerId and workerId are required' });
     }
 
     const result     = await engine.executeEscrowTurn(workerId, buyerId);
+    let events = result.events as any[];
+    
+    if (_forceViolation) {
+      events.push({ type: 'turn.denied', outcome: 'denied', reason: 'Forced violation from dashboard' });
+    }
+
     const evalResult = await engine.evaluateAuditLogAndSlash(
       result.executionId,
       escrowGrantId ?? '',
       buyerId,
       workerId,
-      result.events as any[]
+      events
     );
 
-    res.json({ status: result.status, evaluation: evalResult });
+    res.json({ status: evalResult.isSlashed ? 'slashed' : result.status, evaluation: evalResult });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

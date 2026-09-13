@@ -2,10 +2,17 @@
   "name": "govstake-workspace",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "dev:all": "concurrently \"npm run dev --workspace=dashboard\" \"npm run dev --workspace=escrow-engine\" \"npm run dry-run --workspace=arena-agent\"",
+    "build": "npm run build --workspaces"
+  },
   "workspaces": [
     "dashboard",
     "escrow-engine",
     "arena-agent",
     "mcp-server"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
 }

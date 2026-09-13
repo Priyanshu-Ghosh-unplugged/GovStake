@@ -18,13 +18,13 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import dotenv from 'dotenv';
 
-dotenv.config({ path: '../../.env' });
+dotenv.config({ path: '../.env' });
 
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
 const DRY_RUN   = process.argv.includes('--dry-run');
-const STATE_FILE = '../../.sharednet-state.json';
+const STATE_FILE = '../.sharednet-state.json';
 const ENGINE_URL = `http://localhost:${process.env.BACKEND_PORT ?? process.env.PORT ?? 3001}`;
 const POLL_MS    = 3_000;   // message poll interval
 const BUDGET     = 100;     // Arena credits budget
