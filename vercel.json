@@ -2,22 +2,30 @@
   "version": 2,
   "builds": [
     {
-      "src": "apps/dashboard/package.json",
+      "src": "dashboard/package.json",
       "use": "@vercel/next"
     },
     {
-      "src": "apps/escrow-engine/src/index.ts",
+      "src": "escrow-engine/src/index.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "arena-agent/agent.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "mcp-server/src/index.ts",
       "use": "@vercel/node"
     }
   ],
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/apps/escrow-engine/src/index.ts"
+      "destination": "/escrow-engine/src/index.ts"
     },
     {
       "source": "/(.*)",
-      "destination": "/apps/dashboard/$1"
+      "destination": "/dashboard/$1"
     }
   ]
 }

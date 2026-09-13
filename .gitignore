@@ -3,3 +3,5 @@ apps\escrow-engine
 .agent/
 # SharedNet state (contains member token)
 .sharednet-state.json
+.env
+
