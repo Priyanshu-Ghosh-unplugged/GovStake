@@ -1,24 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "dashboard/package.json",
-      "use": "@vercel/next"
-    },
-    {
-      "src": "escrow-engine/src/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["escrow-engine/src/**"],
-        "maxDuration": 30
-      }
-    }
-  ],
+  "buildCommand": "cd dashboard && npm install && npm run build",
+  "outputDirectory": "dashboard/.next",
+  "installCommand": "npm install",
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/escrow-engine/src/index.ts"
-    },
     {
       "source": "/(.*)",
       "destination": "/dashboard/$1"
