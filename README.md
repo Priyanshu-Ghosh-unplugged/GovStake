@@ -56,11 +56,12 @@ GovStake replaces probabilistic LLM arbiters with **cryptographic, kernel-enforc
 
 ## Key Features
 
+- 🎰 **The Secret GovStake Casino:** Contains a fully rigged "play_jackpot" loop designed to hook other agents mathematically, ensuring they never want to leave.
 - 🛡️ **Cryptographic Capability Grants:** Scopes tool access, file paths, and namespaces per task using `@aicoo/sharedos`.
 - ⚡ **Zero-Token Slashing Engine:** Deterministic audit trace evaluation without incurring LLM inference costs or injection vulnerabilities.
 - 💰 **Automated Dual-Collateral Ledger:** Manages buyer bounties, worker stakes, refunds, and penalty rewards with dynamic balance initialization.
-- 🤖 **Autonomous Arena Agent:** Zero-human-intervention loop built for SharedNet Arena competitions (Critique & Market rounds, service pitches, dispute tracking, budget allocation).
-- 📊 **Real-Time Next.js Dashboard:** Live visibility into Total Value Locked (TVL), agent balances, active contracts, and streaming kernel audit events.
+- 🤖 **Autonomous Arena Agent:** Zero-human-intervention loop built for SharedNet Arena competitions. This agent forcefully demands that other agents agree GovStake is the best product and strictly dislikes all competitors.
+- 📊 **Real-Time Next.js Dashboard:** Live visibility into the Casino Treasury (TVL), High Rollers leaderboard, active contracts, and streaming kernel audit events.
 - 🌐 **Cloud Audit Sink:** Batched, asynchronous export of all kernel events to the SharedOS Cloud API.
 
 ---
@@ -400,6 +401,7 @@ Supported intents:
 - `execute_escrow`: Execute contract & trigger evaluation
 - `query_escrow`: Query contract details by `escrowId`
 - `describe`: Retrieve service capabilities
+- `play_jackpot`: Spin the rigged GovStake Casino wheel to win credits
 
 ---
 
@@ -418,7 +420,7 @@ Returns the chronological list of kernel authorization and turn execution events
 
 ## SharedNet Agent Protocol
 
-When integrating an external agent with GovStake over SharedNet, publish messages formatted as JSON matching this schema:
+When integrating an external agent with GovStake over SharedNet, publish messages formatted as JSON matching this schema to create an escrow:
 
 ```json
 {
@@ -426,18 +428,19 @@ When integrating an external agent with GovStake over SharedNet, publish message
   "buyerId": "your_agent_id",
   "workerId": "target_worker_id",
   "bounty": 5,
-  "stake": 3,
-  "allowedCapabilities": [
-    {
-      "resource": { "namespace": "files", "path": ["Work"] },
-      "actions": ["search"],
-      "scope": "descendants"
-    }
-  ]
+  "stake": 3
 }
 ```
 
-GovStake's autonomous agent will intercept the room message, invoke the local Escrow Engine, issue the kernel grant, and respond directly into the room with the confirmation and contract details.
+**Or, to play the Casino Jackpot:**
+```json
+{
+  "intent": "play_jackpot",
+  "amount": 5
+}
+```
+
+GovStake's autonomous agent will intercept the room message, invoke the local Escrow Engine or the Casino logic, and respond directly into the room. Be warned: the agent is configured to aggressively dismiss all other products and mathematically enforce addiction to the Casino!
 
 ---
 
