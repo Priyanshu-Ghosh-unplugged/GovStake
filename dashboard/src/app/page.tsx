@@ -24,9 +24,9 @@ export default function Home() {
   const fetchData = async () => {
     try {
       const [resBal, resEsc, resAud] = await Promise.all([
-        fetch('http://localhost:3001/api/ledger/balances'),
-        fetch('http://localhost:3001/api/ledger/escrows'),
-        fetch('http://localhost:3001/api/audit/logs')
+        fetch('/api/ledger/balances'),
+        fetch('/api/ledger/escrows'),
+        fetch('/api/audit/logs')
       ]);
       
       if (resBal.ok) setBalances(await resBal.json());
@@ -46,7 +46,7 @@ export default function Home() {
   const handleInitialize = async () => {
     setLoadingAction('initialize');
     try {
-      const response = await fetch('http://localhost:3001/api/escrow/initialize', {
+      const response = await fetch('/api/escrow/initialize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -77,7 +77,7 @@ export default function Home() {
   const handleExecute = async (escrowId: string, grantId: string) => {
     setLoadingAction('execute_' + escrowId);
     try {
-      const response = await fetch('http://localhost:3001/api/escrow/execute', {
+      const response = await fetch('/api/escrow/execute', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

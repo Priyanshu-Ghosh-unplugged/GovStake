@@ -8,14 +8,6 @@
     {
       "src": "escrow-engine/src/index.ts",
       "use": "@vercel/node"
-    },
-    {
-      "src": "arena-agent/agent.ts",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "mcp-server/src/index.ts",
-      "use": "@vercel/node"
     }
   ],
   "rewrites": [

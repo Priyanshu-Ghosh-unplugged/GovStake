@@ -1,7 +1,7 @@
 node_modules/
-apps\escrow-engine
+escrow-engine/node_modules/
+dashboard/.next/
 .agent/
 # SharedNet state (contains member token)
 .sharednet-state.json
 .env
-
