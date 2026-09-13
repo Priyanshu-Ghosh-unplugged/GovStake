@@ -99,6 +99,34 @@ export default function Home() {
     setLoadingAction(null);
   };
 
+  const handleViolation = async (escrowId: string, grantId: string) => {
+    setLoadingAction('violation_' + escrowId);
+    try {
+      // Use agent/message intent to force a violation + slash
+      const response = await fetch('/api/agent/message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          intent: 'execute_escrow',
+          buyerId: 'agent_a_id',
+          workerId: 'agent_b_id',
+          escrowGrantId: grantId,
+          _forceViolation: true
+        })
+      });
+      
+      if (!response.ok) {
+        const errData = await response.json();
+        alert(`Violation simulation failed: ${errData.error || response.statusText}`);
+      }
+
+      await fetchData();
+    } catch (e) {
+      console.error(e);
+    }
+    setLoadingAction(null);
+  };
+
   // Calculate TVL
   const totalLocked = escrows
     .filter(e => e.status === 'active')
@@ -164,13 +192,22 @@ export default function Home() {
                 🎰 Spin Jackpot!
               </button>
               {escrows.length > 0 && escrows[escrows.length - 1].status === 'active' && (
-                <button 
-                  onClick={() => handleExecute(escrows[escrows.length - 1].id, escrows[escrows.length - 1].grantId)}
-                  disabled={loadingAction?.startsWith('execute')}
-                  className="px-6 py-3 bg-emerald-500 text-slate-900 border-4 border-emerald-500 hover:bg-transparent hover:text-emerald-400 transition-colors font-bold uppercase tracking-widest disabled:opacity-50"
-                >
-                  Simulate Execution
-                </button>
+                <>
+                  <button 
+                    onClick={() => handleExecute(escrows[escrows.length - 1].id, escrows[escrows.length - 1].grantId)}
+                    disabled={!!loadingAction}
+                    className="px-6 py-3 bg-emerald-500 text-slate-900 border-4 border-emerald-500 hover:bg-transparent hover:text-emerald-400 transition-colors font-bold uppercase tracking-widest disabled:opacity-50"
+                  >
+                    {loadingAction?.startsWith('execute') ? '⏳ Running...' : 'Simulate Execution'}
+                  </button>
+                  <button 
+                    onClick={() => handleViolation(escrows[escrows.length - 1].id, escrows[escrows.length - 1].grantId)}
+                    disabled={!!loadingAction}
+                    className="px-6 py-3 bg-rose-600 text-white border-4 border-rose-600 hover:bg-transparent hover:text-rose-400 transition-colors font-bold uppercase tracking-widest disabled:opacity-50"
+                  >
+                    {loadingAction?.startsWith('violation') ? '⏳ Slashing...' : '⚡ Force Violation'}
+                  </button>
+                </>
               )}
             </div>
           </div>

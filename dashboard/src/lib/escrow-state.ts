@@ -125,15 +125,21 @@ if (!globalForLedger.__escrowLedger) {
 }
 export const ledger = globalForLedger.__escrowLedger;
 
-/** Simulate a deterministic escrow turn (no external SharedOS call needed) */
+/**
+ * Simulate a successful escrow turn (happy path).
+ * Called by /api/escrow/execute and /api/agent/message execute_escrow intent.
+ */
 export function simulateEscrowExecution(
   workerId: string,
   buyerId: string,
   escrowGrantId: string
 ): { isSlashed: boolean; isEscalated: boolean; events: AuditEvent[] } {
-  const executionId = crypto.randomUUID();
+  // 30% chance the worker attempts an out-of-scope action (for demo realism)
+  if (Math.random() < 0.3) {
+    return simulateViolation(workerId, buyerId, escrowGrantId);
+  }
 
-  // Simulate a successful tool call
+  // Happy path — authorized file.search
   const toolEvent = ledger.addAuditEvent({
     type: 'authorization.checked',
     outcome: 'allowed',
@@ -152,12 +158,52 @@ export function simulateEscrowExecution(
     buyerId,
   });
 
-  // Release funds on success
+  // Release bounty + stake return to worker
   ledger.releaseFunds(workerId, 8);
 
   return {
     isSlashed: false,
     isEscalated: false,
     events: [toolEvent, completeEvent],
+  };
+}
+
+/**
+ * Simulate a policy violation — the worker attempted an unauthorized action.
+ * Fires a `turn.denied` event and slashes the worker's stake.
+ * Called directly by the "Simulate Violation" button and by simulateEscrowExecution
+ * in its probabilistic violation branch.
+ */
+export function simulateViolation(
+  workerId: string,
+  buyerId: string,
+  escrowGrantId: string
+): { isSlashed: boolean; isEscalated: boolean; events: AuditEvent[] } {
+  // Worker tried to read outside the allowed Work/ path
+  const deniedEvent = ledger.addAuditEvent({
+    type: 'authorization.checked',
+    outcome: 'denied',
+    tool: 'files.read',
+    action: 'read',
+    escrowId: escrowGrantId,
+    workerId,
+    buyerId,
+  });
+
+  const slashEvent = ledger.addAuditEvent({
+    type: 'turn.denied',
+    outcome: 'denied',
+    escrowId: escrowGrantId,
+    workerId,
+    buyerId,
+  });
+
+  // Slash: burn worker stake, refund buyer bounty + 1 penalty credit
+  ledger.slashStake(workerId, buyerId, 5);
+
+  return {
+    isSlashed: true,
+    isEscalated: false,
+    events: [deniedEvent, slashEvent],
   };
 }
