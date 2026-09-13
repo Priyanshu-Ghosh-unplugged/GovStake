@@ -1,0 +1,15 @@
+{
+  "version": "1",
+  "executionId": "test-123",
+  "agent": { "kind": "agent", "agentId": "worker_test" },
+  "message": {
+    "version": "1",
+    "id": "msg-123",
+    "sender": { "kind": "agent", "agentId": "buyer_test" },
+    "receiver": { "kind": "agent", "agentId": "worker_test" },
+    "purpose": "escrow_contract_execution",
+    "payload": { "text": "Execute escrow instructions." },
+    "traceId": "tr-123",
+    "createdAt": "2026-09-09T00:00:00Z"
+  }
+}

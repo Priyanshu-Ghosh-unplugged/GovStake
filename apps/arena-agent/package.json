@@ -1,0 +1,18 @@
+{
+  "name": "arena-agent",
+  "version": "1.0.0",
+  "description": "GovStake Autonomous Arena Agent",
+  "type": "module",
+  "scripts": {
+    "start":    "node --import tsx/esm agent.ts",
+    "dry-run":  "node --import tsx/esm agent.ts --dry-run"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "tsx":        "^4.19.0",
+    "typescript": "^5.6.2"
+  }
+}

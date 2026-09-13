@@ -1,0 +1,14 @@
+{
+  "events": [
+    {
+      "id": "evt_test_12345",
+      "type": "tool.denied",
+      "traceId": "tr_test",
+      "namespaceId": "govstake",
+      "at": "2026-09-09T00:00:00Z",
+      "outcome": "denied",
+      "tool": "files.search",
+      "reasonCode": "host_policy_denied"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "sharednet": {
+      "serverUrl": "https://www.sharednet.ai/api/mcp"
+    }
+  }
+}
