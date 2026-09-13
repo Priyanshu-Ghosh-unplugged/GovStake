@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "dashboard",
+    "escrow-engine",
+    "arena-agent",
+    "mcp-server"
   ]
 }
