@@ -11,7 +11,7 @@ import {
 import dotenv from 'dotenv';
 import crypto from 'crypto';
 
-dotenv.config({ path: '../../.env' });
+dotenv.config(); // uses .env in cwd, or environment variables already set (Vercel)
 
 /**
  * A deterministic AgentTurnDriver that represents the escrow worker agent.

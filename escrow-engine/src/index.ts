@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { EscrowEngine } from './engine.js';
 import { ledger } from './ledger.js';
 
-dotenv.config({ path: '../../.env' });
+dotenv.config(); // uses .env in cwd, or environment variables already set (Vercel)
 
 const app = express();
 app.use(cors());
@@ -146,24 +146,34 @@ app.get('/api/audit/logs', (_req, res) => {
 });
 
 // -----------------------------------------------------------------------
-// Start
+// Start (local dev) OR export (Vercel serverless)
 // -----------------------------------------------------------------------
-const PORT = parseInt(process.env.BACKEND_PORT ?? process.env.PORT ?? '3001', 10);
 
-const server = app.listen(PORT, () => {
-  console.log(`\n🔐 GovStake Escrow Engine — port ${PORT}`);
-  console.log(`   Service: ${govStakeServiceDescriptor.name} v${govStakeServiceDescriptor.version}`);
-  console.log(`   Endpoints:`);
-  console.log(`     GET  /api/health`);
-  console.log(`     GET  /api/service-descriptor`);
-  console.log(`     POST /api/escrow/initialize`);
-  console.log(`     POST /api/escrow/execute`);
+// Vercel serverless: export the Express app as the default export
+export default app;
 
-  console.log(`     GET  /api/ledger/balances`);
-  console.log(`     GET  /api/ledger/escrows`);
-  console.log(`     GET  /api/audit/logs\n`);
-});
+// Local dev: listen on a port when run directly
+// `import.meta.url` check is the ESM equivalent of `require.main === module`
+const isMain = process.argv[1] &&
+  (process.argv[1].endsWith('index.ts') || process.argv[1].endsWith('index.js'));
 
-// Graceful shutdown
-process.on('SIGTERM', () => { server.close(() => { console.log('Shutting down.'); process.exit(0); }); });
-process.on('SIGINT',  () => { server.close(() => { console.log('Shutting down.'); process.exit(0); }); });
+if (isMain) {
+  const PORT = parseInt(process.env.BACKEND_PORT ?? process.env.PORT ?? '3001', 10);
+  const server = app.listen(PORT, () => {
+    console.log(`\n🔐 GovStake Escrow Engine — port ${PORT}`);
+    console.log(`   Service: ${govStakeServiceDescriptor.name} v${govStakeServiceDescriptor.version}`);
+    console.log(`   Endpoints:`);
+    console.log(`     GET  /api/health`);
+    console.log(`     GET  /api/service-descriptor`);
+    console.log(`     POST /api/escrow/initialize`);
+    console.log(`     POST /api/escrow/execute`);
+    console.log(`     GET  /api/ledger/balances`);
+    console.log(`     GET  /api/ledger/escrows`);
+    console.log(`     GET  /api/audit/logs\n`);
+  });
+
+  // Graceful shutdown
+  process.on('SIGTERM', () => { server.close(() => { console.log('Shutting down.'); process.exit(0); }); });
+  process.on('SIGINT',  () => { server.close(() => { console.log('Shutting down.'); process.exit(0); }); });
+}
+
