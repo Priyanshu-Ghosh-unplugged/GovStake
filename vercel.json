@@ -1,6 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "npm run build --workspace=frontend && rm -rf dist && cp -r frontend/dist dist",
+  "buildCommand": "npm run build --workspace=frontend && cp -r frontend/dist dist",
+  "outputDirectory": "dist",
   "installCommand": "npm install",
   "rewrites": [
     {
