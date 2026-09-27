@@ -3,16 +3,18 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev:all": "concurrently \"npm run dev --workspace=dashboard\" \"npm run dev --workspace=escrow-engine\" \"npm run dry-run --workspace=arena-agent\"",
+    "dev:all": "concurrently \"npm run dev --workspace=frontend\" \"npm start --workspace=backend\"",
     "build": "npm run build --workspaces"
   },
   "workspaces": [
-    "dashboard",
-    "escrow-engine",
-    "arena-agent",
+    "frontend",
+    "backend",
     "mcp-server"
   ],
   "devDependencies": {
     "concurrently": "^10.0.5"
+  },
+  "dependencies": {
+    "sharednet": "^0.1.8"
   }
 }

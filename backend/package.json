@@ -1,5 +1,5 @@
 {
-  "name": "mcp-server",
+  "name": "backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.1",
-    "axios": "^1.7.9"
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "cheerio": "^1.0.0"
   }
 }
