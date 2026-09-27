@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "cheerio": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
