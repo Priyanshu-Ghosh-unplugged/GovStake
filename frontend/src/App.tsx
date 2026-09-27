@@ -34,7 +34,7 @@ function App() {
     setTimeout(() => addLog('Applying strict sanitization prompt (neutralizing imperatives)...'), 4000);
     
     try {
-      const res = await fetch('http://localhost:3001/api/research', {
+      const res = await fetch('/api/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
